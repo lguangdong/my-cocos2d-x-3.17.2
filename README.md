@@ -1,3 +1,4 @@
+# 学习之用
 <img src="http://www.cocos2d-x.org/attachments/801/cocos2dx_portrait.png" width=200>
 
 
