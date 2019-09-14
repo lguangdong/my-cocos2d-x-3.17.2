@@ -30,7 +30,7 @@ USING_NS_CC;
 
 int WINAPI _tWinMain(HINSTANCE hInstance,
                        HINSTANCE hPrevInstance,
-                       LPTSTR    lpCmdLine,
+                       LPTSTR    lpCmdLine, //lptster
                        int       nCmdShow)
 {
     UNREFERENCED_PARAMETER(hPrevInstance);

@@ -1,32 +1,22 @@
-/****************************************************************************
- Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
- 
- http://www.cocos2d-x.org
- 
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
- 
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
- 
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- THE SOFTWARE.
- ****************************************************************************/
+
 
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
+#include<string>
 
 USING_NS_CC;
+HelloWorld::HelloWorld() {
+	for (int i = 0; i < LINE; i++) {
+		for (int j = 0; j < COLUME; j++) {
+			m_pSquare[i][j] = NULL;
+		}
+	}
+	//构造的时候获取一个方块类型
+	newSquareType();
+}
+HelloWorld::~HelloWorld() {
 
+}
 Scene* HelloWorld::createScene()
 {
     return HelloWorld::create();
@@ -36,13 +26,8 @@ Scene* HelloWorld::createScene()
 static void problemLoading(const char* filename)
 {
     printf("Error while loading: %s\n", filename);
-    printf("Depending on how you compiled you might have to add 'Resources/' in front of filenames in HelloWorldScene.cpp\n");
-}
-void myTest() {
-	//Director
-	auto size = Director::getInstance()->getWinSize();
-	CCLOG("size is %f",size.width);
-}
+};
+
 // on "init" you need to initialize your instance
 bool HelloWorld::init()
 {
@@ -52,6 +37,11 @@ bool HelloWorld::init()
     {
         return false;
     }
+
+	auto sizeOverLayer = Director::getInstance()->getWinSize();
+	LayerColor* maskColorLayer = LayerColor::create(ccc4(255, 255, 255, 255));
+	this->addChild(maskColorLayer);
+
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
@@ -85,43 +75,61 @@ bool HelloWorld::init()
 
     /////////////////////////////
     // 3. add your codes below...
+	//添加一个分数显示板
+	char buf[4] = "0"; //初始值
+	CCLabelTTF* m_pLabel = CCLabelTTF::create(buf, "arial", 15);
+	m_pLabel->setColor(ccColor3B(0, 0, 0));
+	m_pLabel->setAnchorPoint(Vec2(0, 0));
+	m_pLabel->setPosition(Vec2(origin.x + 100,origin.y+100)); 
+	this->addChild(m_pLabel, 1);
 
-    // add a label shows "Hello World"
-    // create and initialize a label
+	//初始化格子
+	for (int i = 0; i < LINE; i++) {
+		for (int j = 0; j < COLUME; j++) {
+			m_pSquare[i][j] = CCSprite::create("square.png");
+			m_pSquare[i][j]->setPosition(CCDirector::sharedDirector()->convertToGL(ccp(j * 20 + j * 2 + 10, i * 20 + i * 2 + 10)));
+			m_pSquare[i][j]->setName(0);
+			m_pSquare[i][j]->setColor(ccColor3B(255, 255, 255));
+			this->addChild(m_pSquare[i][j]);
+		}
+	}
 
-    auto label = Label::createWithTTF("Hello World", "fonts/Marker Felt.ttf", 24);
-    if (label == nullptr)
-    {
-        problemLoading("'fonts/Marker Felt.ttf'");
-    }
-    else
-    {
-        // position the label on the center of the screen
-        label->setPosition(Vec2(origin.x + visibleSize.width/2,
-                                origin.y + visibleSize.height - label->getContentSize().height));
-
-        // add the label as a child to this layer
-        this->addChild(label, 1);
-    }
-
-    // add "HelloWorld" splash screen"
-    auto sprite = Sprite::create("HelloWorld.png");
-    if (sprite == nullptr)
-    {
-        problemLoading("'HelloWorld.png'");
-    }
-    else
-    {
-        // position the sprite on the center of the screen
-        sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
-
-        // add the sprite as a child to this layer
-        this->addChild(sprite, 0);
-    }
-	myTest();
     return true;
 }
-
+void HelloWorld::newSquareType() {
+	m_nCurSquareType = rand() % 19 + 1;  //获取一个1~19范围内的随机数
+	CCLOG("new type: %d",m_nCurSquareType);
+	switch (m_nCurSquareType) {
+	case 1:
+	case 3:
+	case 4:
+	case 9:
+	case 10:
+	case 11:
+	case 12:
+	case 15:
+	case 16:
+		m_nCurLine = 0;
+		m_nCurColume = 3;
+		break;
+	case 2:
+	case 5:
+	case 6:
+	case 7:
+	case 8:
+	case 13:
+	case 14:
+	case 17:
+	case 18:
+	case 19:
+		m_nCurLine = 0;
+		m_nCurColume = 4;
+		break;
+	}
+ }
+void HelloWorld::updateDown(float dt) {
+	
+}
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
 {

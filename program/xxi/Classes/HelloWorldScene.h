@@ -26,10 +26,14 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
-
+USING_NS_CC;
+#define LINE 24
+#define COLUME 10
 class HelloWorld : public cocos2d::Scene
 {
 public:
+	virtual ~HelloWorld();
+	HelloWorld();
     static cocos2d::Scene* createScene();
 
     virtual bool init();
@@ -39,6 +43,17 @@ public:
     
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
+
+	//方块下降
+	void updateDown(float dt); 
+	//产生一个新方块
+	void newSquareType();
+
+
+	CCSprite* m_pSquare[LINE][COLUME];  //方块单元格
+	int m_nCurSquareType;//当前方块类型
+	int m_nCurLine;      //当前所处的行
+	int m_nCurColume;       //当前所处的列
 };
 
 #endif // __HELLOWORLD_SCENE_H__

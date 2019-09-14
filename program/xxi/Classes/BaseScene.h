@@ -2,7 +2,7 @@
 #define BASESCENE_H
 
 #include "cocos2d.h"
-class BaseScene:public cocos2d::Scene{
+class BaseScene: public cocos2d::Scene{
 public:
 	BaseScene();
 	virtual ~BaseScene();
