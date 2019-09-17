@@ -26,6 +26,7 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
+#include<map>
 USING_NS_CC;
 #define LINE 24
 #define COLUME 10
@@ -48,8 +49,10 @@ public:
 	void updateDown(float dt); 
 	//产生一个新方块
 	void newSquareType();
-
-
+	//清除正行
+	void clearLine(int lineStart, int lineEnd);
+	//向下拷贝一行
+	void copyLine(int lineIndex);
 	CCSprite* m_pSquare[LINE][COLUME];  //方块单元格
 	int m_nCurSquareType;//当前方块类型
 	int m_nCurLine;      //当前所处的行

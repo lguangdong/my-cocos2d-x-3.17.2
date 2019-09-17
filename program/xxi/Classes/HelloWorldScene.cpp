@@ -39,7 +39,7 @@ bool HelloWorld::init()
     }
 
 	auto sizeOverLayer = Director::getInstance()->getWinSize();
-	LayerColor* maskColorLayer = LayerColor::create(ccc4(255, 255, 255, 255));
+	LayerColor* maskColorLayer = LayerColor::create(ccColor4B(255, 255, 255, 255));
 	this->addChild(maskColorLayer);
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
@@ -88,16 +88,17 @@ bool HelloWorld::init()
 		for (int j = 0; j < COLUME; j++) {
 			m_pSquare[i][j] = CCSprite::create("square.png");
 			m_pSquare[i][j]->setPosition(CCDirector::sharedDirector()->convertToGL(ccp(j * 20 + j * 2 + 10, i * 20 + i * 2 + 10)));
-			m_pSquare[i][j]->setName(0);
+			m_pSquare[i][j]->setTag(0);
 			m_pSquare[i][j]->setColor(ccColor3B(255, 255, 255));
 			this->addChild(m_pSquare[i][j]);
 		}
 	}
-
+	this->schedule(schedule_selector(HelloWorld::updateDown), 1.0);
     return true;
 }
 void HelloWorld::newSquareType() {
-	m_nCurSquareType = rand() % 19 + 1;  //获取一个1~19范围内的随机数
+	//m_nCurSquareType = rand() % 19 + 1;  //获取一个1~19范围内的随机数
+	m_nCurSquareType = 2;
 	CCLOG("new type: %d",m_nCurSquareType);
 	switch (m_nCurSquareType) {
 	case 1:
@@ -128,7 +129,58 @@ void HelloWorld::newSquareType() {
 	}
  }
 void HelloWorld::updateDown(float dt) {
-	
+	CCLOG("position:(%d,%d)", m_nCurLine, m_nCurColume);
+
+	switch (m_nCurSquareType) {
+	case 1:
+		if (m_nCurLine >= LINE) {
+			clearLine(LINE - 1, LINE - 1);
+			newSquareType();
+			return;
+		}
+		for (int i = 0; i < 4; i++) {
+			if (m_pSquare[m_nCurLine][i + m_nCurColume]->getTag() == 1) {
+				clearLine(m_nCurLine - 1, m_nCurLine - 1);
+				newSquareType();
+				return;
+			}
+		}
+		//下降一格
+		for (int i = 0; i < 4; i++) {
+			if (m_nCurLine < LINE && m_nCurLine - 1 > -1) {
+				m_pSquare[m_nCurLine - 1][m_nCurColume + i]->setColor(ccColor3B(255, 255, 255));
+				m_pSquare[m_nCurLine - 1][m_nCurColume + i]->setTag(0);
+			}
+			if (m_nCurLine < LINE) {
+				m_pSquare[m_nCurLine][m_nCurColume + i]->setColor(ccColor3B(52, 228, 249));
+				m_pSquare[m_nCurLine][m_nCurColume + i]->setTag(1);
+			}
+		}
+		m_nCurLine++;
+		break;
+	case 2:
+		if (m_nCurLine >= LINE) {
+			clearLine(LINE - 4, LINE - 1);
+			newSquareType();
+			return;
+		}
+		if (m_pSquare[m_nCurLine][m_nCurColume]->getTag() == 1) {
+			clearLine(m_nCurLine - 4, m_nCurLine - 1);
+			newSquareType();
+			return;
+		}
+		//下降一格
+		if (m_nCurLine < LINE && m_nCurLine - 4 > -1) {
+			m_pSquare[m_nCurLine - 4][m_nCurColume]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 4][m_nCurColume]->setTag(0);
+		}
+		if (m_nCurLine < LINE) {
+			m_pSquare[m_nCurLine][m_nCurColume]->setColor(ccColor3B(52, 228, 249));
+			m_pSquare[m_nCurLine][m_nCurColume]->setTag(1);
+		}
+		m_nCurLine++;
+		break;
+	}
 }
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
@@ -144,4 +196,42 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 
 }
 
+void HelloWorld::clearLine(int lineStart, int lineEnd) {
+	for (int i = lineStart; i <= lineEnd; i++) {
+		int j;
+		for (j = 0; j < COLUME; j++) {
+			if (m_pSquare[i][j]->getTag() == 0) {
+				break;
+			}
+		}
+		if (j == COLUME) {
+			//这一行满足消除条件
+			for (int x = 0; x < COLUME; x++) {
+				m_pSquare[i][x]->setColor(ccColor3B(255, 255, 255));
+				m_pSquare[i][x]->setTag(0);
+			}
+			for (int k = i - 1; k >= 0; k--) {
+				copyLine(k);
+			}
+		}
+	}
+}
+
+
+void HelloWorld::copyLine(int lineIndex) {
+
+	int j;
+	for (j = 0; j < COLUME; j++) {
+		if (m_pSquare[lineIndex][j]->getTag() == 1) {
+			break;
+		}
+	}
+	if (j != COLUME) {  //需要拷贝
+		for (int i = 0; i < COLUME; i++) {
+			m_pSquare[lineIndex + 1][i]->setColor(m_pSquare[lineIndex][i]->getColor());
+			m_pSquare[lineIndex + 1][i]->setTag(m_pSquare[lineIndex][i]->getTag());
+		}
+	}
+		
+}
 
