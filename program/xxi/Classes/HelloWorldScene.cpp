@@ -93,12 +93,12 @@ bool HelloWorld::init()
 			this->addChild(m_pSquare[i][j]);
 		}
 	}
-	this->schedule(schedule_selector(HelloWorld::updateDown), 1.0);
+	this->schedule(schedule_selector(HelloWorld::updateDown), 0.5);
     return true;
 }
 void HelloWorld::newSquareType() {
 	//m_nCurSquareType = rand() % 19 + 1;  //获取一个1~19范围内的随机数
-	m_nCurSquareType = 2;
+	m_nCurSquareType = 19;
 	CCLOG("new type: %d",m_nCurSquareType);
 	switch (m_nCurSquareType) {
 	case 1:
@@ -177,6 +177,529 @@ void HelloWorld::updateDown(float dt) {
 		if (m_nCurLine < LINE) {
 			m_pSquare[m_nCurLine][m_nCurColume]->setColor(ccColor3B(52, 228, 249));
 			m_pSquare[m_nCurLine][m_nCurColume]->setTag(1);
+		}
+		m_nCurLine++;
+		break;
+	case 3:
+		if (m_nCurLine >= LINE) {
+			clearLine(m_nCurLine - 2, m_nCurLine - 1);
+			newSquareType();
+			return;
+		}
+		for (int i = 0; i < 3; i++) {
+			if (m_pSquare[m_nCurLine][m_nCurColume + i]->getTag() == 1) {
+				clearLine(m_nCurLine - 2, m_nCurLine - 1);
+				newSquareType();
+				return;
+			}
+		}
+		//下降一格
+		for (int i = 0; i < 3; i++) {
+			if (m_nCurLine < LINE&&m_nCurLine - 1 > -1) {
+				m_pSquare[m_nCurLine - 1][m_nCurColume + i]->setColor(ccColor3B(255, 255, 255));
+				m_pSquare[m_nCurLine - 1][m_nCurColume + i]->setTag(0);
+
+			}
+			m_pSquare[m_nCurLine][m_nCurColume + i]->setColor(ccColor3B(245, 30, 217));
+			m_pSquare[m_nCurLine][m_nCurColume + i]->setTag(1);
+
+		}
+		if (m_nCurLine - 1 > -1) {
+			m_pSquare[m_nCurLine - 1][m_nCurColume]->setColor(ccColor3B(245, 30, 217));
+			m_pSquare[m_nCurLine - 1][m_nCurColume]->setTag(1);
+		}
+		if (m_nCurLine - 2 > -1) {
+			m_pSquare[m_nCurLine - 2][m_nCurColume]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 2][m_nCurColume]->setTag(0);
+		}
+		m_nCurLine++;
+		break;
+	case 4:
+		if (m_nCurLine >= LINE) {
+			clearLine(LINE - 3, LINE - 1);
+			newSquareType();
+			return;
+		}
+		if (m_pSquare[m_nCurLine][m_nCurColume]->getTag() == 1 || (m_nCurLine - 2 > -1 && m_pSquare[m_nCurLine - 2][m_nCurColume + 1]->getTag() == 1)) {
+			clearLine(m_nCurLine - 3, m_nCurLine - 1);
+			newSquareType();
+			return;
+		}
+		//下降一格
+		for (int i = 0; i < 2; i++) {
+			
+			if (m_nCurLine < LINE && m_nCurLine - 3 > -1) {
+				m_pSquare[m_nCurLine - 3][m_nCurColume + i]->setColor(ccColor3B(255, 255, 255));
+				m_pSquare[m_nCurLine - 3][m_nCurColume + i]->setTag(0);
+			}
+		}
+		if (m_nCurLine < LINE && m_nCurLine - 2 > -1) {
+			m_pSquare[m_nCurLine - 2][m_nCurColume + 1]->setColor(ccColor3B(245, 30, 217));
+			m_pSquare[m_nCurLine - 2][m_nCurColume + 1]->setTag(1);
+		}
+		m_pSquare[m_nCurLine][m_nCurColume]->setColor(ccColor3B(245, 30, 217));
+		m_pSquare[m_nCurLine][m_nCurColume]->setTag(1);
+		m_nCurLine++;
+		break;
+	case 5:
+		if (m_nCurLine >= LINE) {
+			clearLine(LINE - 2, LINE - 1);
+			newSquareType();
+			return;
+		}
+		for (int i = 1; i <= 2; i++) {
+			if (m_pSquare[m_nCurLine][m_nCurColume]->getTag() == 1 || (m_nCurLine - 1 > -1 && m_pSquare[m_nCurLine - 1][m_nCurColume - i]->getTag() == 1)) {
+				clearLine(m_nCurLine - 3, m_nCurLine - 1);
+				newSquareType();
+				return;
+			}
+		}
+		
+		//下降一格
+		for (int i = 0; i <= 2; i++) {
+			if (m_nCurLine - 2 > -1) {
+				m_pSquare[m_nCurLine - 2][m_nCurColume - i]->setColor(ccColor3B(255, 255, 255));
+				m_pSquare[m_nCurLine - 2][m_nCurColume - i]->setTag(0);
+			}
+		}
+		for (int i = 1; i <= 2; i++) {
+			if (m_nCurLine - 1 > -1) {
+				m_pSquare[m_nCurLine - 1][m_nCurColume - i]->setColor(ccColor3B(245, 30, 217));
+				m_pSquare[m_nCurLine - 1][m_nCurColume - i]->setTag(1);
+			}
+			
+		}
+		m_pSquare[m_nCurLine][m_nCurColume]->setColor(ccColor3B(245, 30, 217));
+		m_pSquare[m_nCurLine][m_nCurColume]->setTag(1);
+		m_nCurLine++;
+		break;
+	case 6:
+		if (m_nCurLine >= LINE) {
+			clearLine(LINE - 3, LINE - 1);
+			newSquareType();
+			return;
+		}
+		for (int i = 0; i < 2; i++) {
+			if (m_pSquare[m_nCurLine][m_nCurColume - i]->getTag() == 1) {
+				clearLine(m_nCurLine - 3, m_nCurLine - 1);
+				newSquareType();
+				return;
+			}
+		}
+		if (m_nCurLine < LINE && m_nCurLine - 1 > -1) {
+			m_pSquare[m_nCurLine - 1][m_nCurColume - 1]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 1][m_nCurColume - 1]->setTag(0);
+		}
+		if (m_nCurLine < LINE && m_nCurLine - 3 > -1) {
+			m_pSquare[m_nCurLine - 3][m_nCurColume]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 3][m_nCurColume]->setTag(0);
+		}
+		for (int i = 0; i < 2; i++) {
+			m_pSquare[m_nCurLine][m_nCurColume - i]->setColor(ccColor3B(245, 30, 217));
+			m_pSquare[m_nCurLine][m_nCurColume - i]->setTag(1);
+		}
+		m_nCurLine++;
+		break;
+	case 7:
+		if (m_nCurLine >= LINE) {
+			clearLine(LINE - 2, LINE - 1);
+			newSquareType();
+			return;
+		}
+		for (int i = 0; i < 3; i++) {
+			if (m_pSquare[m_nCurLine][m_nCurColume + i]->getTag() == 1) {
+				clearLine(m_nCurLine - 2, m_nCurLine - 1);
+				newSquareType();
+				return;
+			}
+		}
+		for (int i = 0; i < 2; i++) {
+			if (m_nCurLine - 1 > -1) {
+				m_pSquare[m_nCurLine - 1][m_nCurColume + i]->setColor(ccColor3B(255, 255, 255));
+				m_pSquare[m_nCurLine - 1][m_nCurColume + i]->setTag(0);
+			}
+		}
+		for (int i = 0; i < 3; i++) {
+			if (m_nCurLine - 2 > -1) {
+				m_pSquare[m_nCurLine - 2][m_nCurColume + 2]->setColor(ccColor3B(255, 255, 255));
+				m_pSquare[m_nCurLine - 2][m_nCurColume + 2]->setTag(0);
+			}
+			m_pSquare[m_nCurLine][m_nCurColume + i]->setColor(ccColor3B(245, 30, 217));
+			m_pSquare[m_nCurLine][m_nCurColume + i]->setTag(1);
+		}
+		m_nCurLine++;
+		break;
+	case 8:
+		if (m_nCurLine >= LINE) {
+			clearLine(LINE - 3, LINE - 1);
+			newSquareType();
+			return;
+		}
+		for (int i = 0; i < 2; i++) {
+			if (m_pSquare[m_nCurLine][m_nCurColume + i]->getTag() == 1) {
+				clearLine(m_nCurLine - 3, m_nCurLine - 1);
+				newSquareType();
+				return;
+			}
+		}
+		
+		if (m_nCurLine - 3 > -1) {
+			m_pSquare[m_nCurLine - 3][m_nCurColume]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 3][m_nCurColume]->setTag(0);
+		}
+		if (m_nCurLine - 1 > -1) {
+			m_pSquare[m_nCurLine - 1][m_nCurColume + 1]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 1][m_nCurColume + 1]->setTag(0);
+		}
+		for (int i = 0; i < 2; i++) {
+			m_pSquare[m_nCurLine][m_nCurColume + i]->setColor(ccColor3B(245, 30, 217));
+			m_pSquare[m_nCurLine][m_nCurColume + i]->setTag(1);
+		}
+		m_nCurLine++;
+		break;
+	case 9:
+		if (m_nCurLine >= LINE) {
+			clearLine(LINE - 2, LINE - 1);
+			newSquareType();
+			return;
+		}
+		for (int i = 1; i <= 2; i++) {
+			if (m_pSquare[m_nCurLine][m_nCurColume]->getTag() == 1 || (m_nCurLine - 1 > -1 && m_pSquare[m_nCurLine - 1][m_nCurColume + i]->getTag() == 1)) {
+				clearLine(m_nCurLine - 2, m_nCurLine - 1);
+				newSquareType();
+				return;
+			}
+		}
+
+		if (m_nCurLine - 2 > -1) {
+			for (int i = 0; i < 3; i++) {
+				m_pSquare[m_nCurLine - 2][m_nCurColume + i]->setColor(ccColor3B(255, 255, 255));
+				m_pSquare[m_nCurLine - 2][m_nCurColume + i]->setTag(0);
+			}
+			
+		}
+		for (int i = 1; i <= 2; i++) {
+			if (m_nCurLine - 1 > -1) {
+				m_pSquare[m_nCurLine - 1][m_nCurColume + i]->setColor(ccColor3B(245, 30, 217));
+				m_pSquare[m_nCurLine - 1][m_nCurColume + i]->setTag(1);
+			}
+		}
+		
+		m_pSquare[m_nCurLine][m_nCurColume]->setColor(ccColor3B(245, 30, 217));
+		m_pSquare[m_nCurLine][m_nCurColume]->setTag(1);
+		m_nCurLine++;
+		break;
+	case 10:
+		if (m_nCurLine >= LINE) {
+			clearLine(LINE - 3, LINE - 1);
+			newSquareType();
+			return;
+		}
+		if (m_pSquare[m_nCurLine][m_nCurColume]->getTag() == 1 || (m_nCurLine - 2 > -1 && m_pSquare[m_nCurLine - 2][m_nCurColume - 1]->getTag() == 1)) {
+			clearLine(m_nCurLine - 3, m_nCurLine - 1);
+			newSquareType();
+			return;
+		}
+
+		if (m_nCurLine - 2 > -1) {
+			m_pSquare[m_nCurLine - 2][m_nCurColume - 1]->setColor(ccColor3B(245, 30, 217));
+			m_pSquare[m_nCurLine - 2][m_nCurColume - 1]->setTag(1);
+
+		}
+		if (m_nCurLine - 3 > -1) {
+			for (int i = 0; i < 2; i++) {
+				m_pSquare[m_nCurLine - 3][m_nCurColume - i]->setColor(ccColor3B(255, 255, 255));
+				m_pSquare[m_nCurLine - 3][m_nCurColume - i]->setTag(0);
+			}
+		}
+		m_pSquare[m_nCurLine][m_nCurColume]->setColor(ccColor3B(245, 30, 217));
+		m_pSquare[m_nCurLine][m_nCurColume]->setTag(1);
+		m_nCurLine++;
+		break;
+	case 11:
+		if (m_nCurLine >= LINE) {
+			clearLine(LINE - 2, LINE - 1);
+			newSquareType();
+			return;
+		}
+		for (int i = 0; i < 2; i++) {
+			if (m_pSquare[m_nCurLine][m_nCurColume - i]->getTag() == 1) {
+				clearLine(m_nCurLine - 2, m_nCurLine - 1);
+				newSquareType();
+				return;
+			}
+		}
+		if (m_nCurLine - 1 > -1 && m_pSquare[m_nCurLine - 1][m_nCurColume + 1]->getTag() == 1) {
+			clearLine(m_nCurLine - 2, m_nCurLine - 1);
+			newSquareType();
+			return;
+		}
+
+		if (m_nCurLine - 1 > -1) {
+			m_pSquare[m_nCurLine - 1][m_nCurColume - 1]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 1][m_nCurColume - 1]->setTag(0);
+			m_pSquare[m_nCurLine - 1][m_nCurColume + 1]->setColor(ccColor3B(26, 242, 26));
+			m_pSquare[m_nCurLine - 1][m_nCurColume + 1]->setTag(1);
+		}
+		if (m_nCurLine - 2 > -1) {
+			for (int i = 0; i < 2; i++) {
+				m_pSquare[m_nCurLine - 2][m_nCurColume + i]->setColor(ccColor3B(255, 255, 255));
+				m_pSquare[m_nCurLine - 2][m_nCurColume + i]->setTag(0);
+			}
+		}
+		for (int i = 0; i < 2; i++) {
+			m_pSquare[m_nCurLine][m_nCurColume - i]->setColor(ccColor3B(26, 242, 26));
+			m_pSquare[m_nCurLine][m_nCurColume - i]->setTag(1);
+		}
+		m_nCurLine++;
+		break;
+	case 12:
+		if (m_nCurLine >= LINE) {
+			clearLine(LINE - 3, LINE - 1);
+			newSquareType();
+			return;
+		}
+		if (m_pSquare[m_nCurLine][m_nCurColume]->getTag() == 1 || (m_nCurLine - 1 > -1 && m_pSquare[m_nCurLine - 1][m_nCurColume - 1]->getTag() == 1)) {
+			clearLine(m_nCurLine - 3, m_nCurLine - 1);
+			newSquareType();
+			return;
+		}
+
+		if (m_nCurLine - 1 > -1) {
+			m_pSquare[m_nCurLine - 1][m_nCurColume - 1]->setColor(ccColor3B(26, 242, 26));
+			m_pSquare[m_nCurLine - 1][m_nCurColume - 1]->setTag(1);
+		}
+		if (m_nCurLine - 2 > -1) {
+			m_pSquare[m_nCurLine - 2][m_nCurColume]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 2][m_nCurColume]->setTag(0);
+		}
+		if (m_nCurLine - 3 > -1) {
+			m_pSquare[m_nCurLine - 3][m_nCurColume - 1]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 3][m_nCurColume - 1]->setTag(0);
+		}
+		m_pSquare[m_nCurLine][m_nCurColume]->setColor(ccColor3B(26, 242, 26));
+		m_pSquare[m_nCurLine][m_nCurColume]->setTag(1);
+		m_nCurLine++;
+		break;
+	case 13:
+		if (m_nCurLine >= LINE) {
+			clearLine(LINE - 2, LINE - 1);
+			newSquareType();
+			return;
+		}
+		for (int i = 0; i < 2; i++) {
+			if (m_pSquare[m_nCurLine][m_nCurColume + i]->getTag() == 1) {
+				clearLine(m_nCurLine - 2, m_nCurLine - 1);
+				newSquareType();
+				return;
+			}
+		}
+		if ((m_nCurLine - 1 > -1 && m_pSquare[m_nCurLine - 1][m_nCurColume - 1]->getTag() == 1)) {
+			clearLine(m_nCurLine - 2, m_nCurLine - 1);
+			newSquareType();
+			return;
+		}
+
+		if (m_nCurLine - 1 > -1) {
+			m_pSquare[m_nCurLine - 1][m_nCurColume - 1]->setColor(ccColor3B(26, 242, 26));
+			m_pSquare[m_nCurLine - 1][m_nCurColume - 1]->setTag(1);
+			m_pSquare[m_nCurLine - 1][m_nCurColume + 1]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 1][m_nCurColume + 1]->setTag(0);
+		}
+		if (m_nCurLine - 2 > -1) {
+			for (int i = 0; i < 2; i++) {
+				m_pSquare[m_nCurLine - 2][m_nCurColume - i]->setColor(ccColor3B(255, 255, 255));
+				m_pSquare[m_nCurLine - 2][m_nCurColume - i]->setTag(0);
+			}
+		}
+		for (int i = 0; i < 2; i++) {
+			m_pSquare[m_nCurLine][m_nCurColume + i]->setColor(ccColor3B(26, 242, 26));
+			m_pSquare[m_nCurLine][m_nCurColume + i]->setTag(1);
+		}
+		
+		m_nCurLine++;
+		break;
+	case 14:
+		if (m_nCurLine >= LINE) {
+			clearLine(LINE - 3, LINE - 1);
+			newSquareType();
+			return;
+		}
+		if (m_pSquare[m_nCurLine][m_nCurColume]->getTag() == 1 || (m_nCurLine - 1 > -1 && m_pSquare[m_nCurLine - 1][m_nCurColume + 1]->getTag() == 1)) {
+			clearLine(m_nCurLine - 3, m_nCurLine - 1);
+			newSquareType();
+			return;
+		}
+
+		if (m_nCurLine - 1 > -1) {
+			m_pSquare[m_nCurLine - 1][m_nCurColume + 1]->setColor(ccColor3B(26, 242, 26));
+			m_pSquare[m_nCurLine - 1][m_nCurColume + 1]->setTag(1);
+		}
+		if (m_nCurLine - 2 > -1) {
+			m_pSquare[m_nCurLine - 2][m_nCurColume]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 2][m_nCurColume]->setTag(0);
+		}
+		if (m_nCurLine - 3 > -1) {
+			m_pSquare[m_nCurLine - 3][m_nCurColume + 1]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 3][m_nCurColume + 1]->setTag(0);
+		}
+		m_pSquare[m_nCurLine][m_nCurColume]->setColor(ccColor3B(26, 242, 26));
+		m_pSquare[m_nCurLine][m_nCurColume]->setTag(1);
+		m_nCurLine++;
+		break;
+	case 15:
+		if (m_nCurLine >= LINE) {
+			clearLine(LINE - 2, LINE - 1);
+			newSquareType();
+			return;
+		}
+		if (m_pSquare[m_nCurLine][m_nCurColume]->getTag() == 1) {
+			clearLine(m_nCurLine - 2, m_nCurLine - 1);
+			newSquareType();
+			return;
+		}
+		if (m_pSquare[m_nCurLine][m_nCurColume - 1]->getTag() == 1) {
+			clearLine(m_nCurLine - 2, m_nCurLine - 1);
+			newSquareType();
+			return;
+		}
+		if (m_pSquare[m_nCurLine][m_nCurColume + 1]->getTag() == 1) {
+			clearLine(m_nCurLine - 2, m_nCurLine - 1);
+			newSquareType();
+			return;
+		}
+		if (m_nCurLine - 1 > -1) {
+			m_pSquare[m_nCurLine - 1][m_nCurColume + 1]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 1][m_nCurColume + 1]->setTag(0);
+			m_pSquare[m_nCurLine - 1][m_nCurColume - 1]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 1][m_nCurColume - 1]->setTag(0);
+		}
+		if (m_nCurLine - 2 > -1) {
+			m_pSquare[m_nCurLine - 2][m_nCurColume]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 2][m_nCurColume]->setTag(0);
+		}
+		m_pSquare[m_nCurLine][m_nCurColume + 1]->setColor(ccColor3B(233, 178, 11));
+		m_pSquare[m_nCurLine][m_nCurColume + 1]->setTag(1);
+		m_pSquare[m_nCurLine][m_nCurColume - 1]->setColor(ccColor3B(233, 178, 11));
+		m_pSquare[m_nCurLine][m_nCurColume - 1]->setTag(1);
+		m_pSquare[m_nCurLine][m_nCurColume]->setColor(ccColor3B(233, 178, 11));
+		m_pSquare[m_nCurLine][m_nCurColume]->setTag(1);
+		m_nCurLine++;
+		break;
+	case 16:
+		if (m_nCurLine >= LINE) {
+			clearLine(LINE - 3, LINE - 1);
+			newSquareType();
+			return;
+		}
+		if (m_pSquare[m_nCurLine][m_nCurColume]->getTag() == 1 || (m_nCurLine - 1 > -1 && m_pSquare[m_nCurLine - 1][m_nCurColume + 1]->getTag() == 1)) {
+			clearLine(m_nCurLine - 3, m_nCurLine - 1);
+			newSquareType();
+			return;
+		}
+		if (m_nCurLine - 1 > -1) {
+			m_pSquare[m_nCurLine - 1][m_nCurColume + 1]->setColor(ccColor3B(233, 178, 11));
+			m_pSquare[m_nCurLine - 1][m_nCurColume + 1]->setTag(1);
+		}
+		if (m_nCurLine - 2 > -1) {
+			m_pSquare[m_nCurLine - 2][m_nCurColume + 1]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 2][m_nCurColume + 1]->setTag(0);
+		}if (m_nCurLine - 3 > -1) {
+			m_pSquare[m_nCurLine - 3][m_nCurColume]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 3][m_nCurColume]->setTag(0);
+		}
+		m_pSquare[m_nCurLine][m_nCurColume]->setColor(ccColor3B(233, 178, 11));
+		m_pSquare[m_nCurLine][m_nCurColume]->setTag(1);
+		m_nCurLine++;
+		break;
+	case 17:
+		if (m_nCurLine >= LINE) {
+			clearLine(LINE - 2, LINE - 1);
+			newSquareType();
+			return;
+		}
+		if (m_pSquare[m_nCurLine][m_nCurColume]->getTag() == 1) {
+			clearLine(m_nCurLine - 2, m_nCurLine - 1);
+			newSquareType();
+			return;
+		}
+		if (m_nCurLine - 1 > -1 && m_pSquare[m_nCurLine - 1][m_nCurColume - 1]->getTag() == 1) {
+			clearLine(m_nCurLine - 2, m_nCurLine - 1);
+			newSquareType();
+			return;
+		}
+		if (m_nCurLine - 1 > -1 && m_pSquare[m_nCurLine - 1][m_nCurColume + 1]->getTag() == 1) {
+			clearLine(m_nCurLine - 2, m_nCurLine - 1);
+			newSquareType();
+			return;
+		}
+		if (m_nCurLine - 1 > -1) {
+			m_pSquare[m_nCurLine - 1][m_nCurColume + 1]->setColor(ccColor3B(233, 178, 11));
+			m_pSquare[m_nCurLine - 1][m_nCurColume + 1]->setTag(1);
+			m_pSquare[m_nCurLine - 1][m_nCurColume - 1]->setColor(ccColor3B(233, 178, 11));
+			m_pSquare[m_nCurLine - 1][m_nCurColume - 1]->setTag(1);
+		}
+		if (m_nCurLine - 2 > -1) {
+			m_pSquare[m_nCurLine - 2][m_nCurColume]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 2][m_nCurColume]->setTag(0);
+			m_pSquare[m_nCurLine - 2][m_nCurColume + 1]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 2][m_nCurColume + 1]->setTag(0);
+			m_pSquare[m_nCurLine - 2][m_nCurColume - 1]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 2][m_nCurColume - 1]->setTag(0);
+		}
+		m_pSquare[m_nCurLine][m_nCurColume]->setColor(ccColor3B(233, 178, 11));
+		m_pSquare[m_nCurLine][m_nCurColume]->setTag(1);
+		m_nCurLine++;
+		break;
+	case 18:
+		if (m_nCurLine >= LINE) {
+			clearLine(LINE - 3, LINE - 1);
+			newSquareType();
+			return;
+		}
+		if (m_pSquare[m_nCurLine][m_nCurColume]->getTag() == 1 || (m_nCurLine - 1 > -1 && m_pSquare[m_nCurLine - 1][m_nCurColume - 1]->getTag() == 1)) {
+			clearLine(m_nCurLine - 3, m_nCurLine - 1);
+			newSquareType();
+			return;
+		}
+		if (m_nCurLine - 1 > -1) {
+			m_pSquare[m_nCurLine - 1][m_nCurColume - 1]->setColor(ccColor3B(233, 178, 11));
+			m_pSquare[m_nCurLine - 1][m_nCurColume - 1]->setTag(1);
+		}
+		if (m_nCurLine - 2 > -1) {
+			m_pSquare[m_nCurLine - 2][m_nCurColume - 1]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 2][m_nCurColume - 1]->setTag(0);
+		}
+		if (m_nCurLine - 3 > -1) {
+			m_pSquare[m_nCurLine - 3][m_nCurColume]->setColor(ccColor3B(255, 255, 255));
+			m_pSquare[m_nCurLine - 3][m_nCurColume]->setTag(0);
+		}
+		m_pSquare[m_nCurLine][m_nCurColume]->setColor(ccColor3B(233, 178, 11));
+		m_pSquare[m_nCurLine][m_nCurColume]->setTag(1);
+		m_nCurLine++;
+		break;
+	case 19:
+		if (m_nCurLine >= LINE) {
+			clearLine(LINE - 2, LINE - 1);
+			newSquareType();
+			return;
+		}
+		for (int i = 0; i < 2; i++) {
+			if (m_pSquare[m_nCurLine][m_nCurColume + i]->getTag() == 1) {
+				clearLine(m_nCurLine - 2, m_nCurLine - 1);
+				newSquareType();
+				return;
+			}
+		}
+		if (m_nCurLine - 2 > -1) {
+			for (int i = 0; i < 2; i++) {
+				m_pSquare[m_nCurLine - 2][m_nCurColume + i]->setColor(ccColor3B(255, 255, 255));
+				m_pSquare[m_nCurLine - 2][m_nCurColume + i]->setTag(0);
+			}
+		}
+		for (int i = 0; i < 2; i++) {
+			m_pSquare[m_nCurLine][m_nCurColume + i]->setColor(ccColor3B(233, 178, 11));
+			m_pSquare[m_nCurLine][m_nCurColume + i]->setTag(1);
 		}
 		m_nCurLine++;
 		break;
